@@ -1,1 +1,1 @@
-# nextjs-blog
+# nextjs-app
