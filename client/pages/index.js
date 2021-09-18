@@ -18,6 +18,7 @@ export default function Home() {
 
             </Head> */}
 
+            <Navbar />
             <Link href="/blog">
                 <a>
                     <h1>
@@ -25,7 +26,6 @@ export default function Home() {
                     </h1>
                 </a>
             </Link>
-            <Navbar />
             <Title>Home</Title>
         </div>
     )

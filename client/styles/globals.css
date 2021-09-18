@@ -41,3 +41,7 @@ a {
     --green-light: #c8f8e4;
     --font-family: 'Noto Sans KR', sans-serif;
 }
+
+.container {
+    width: 1100px;
+}
