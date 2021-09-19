@@ -1,32 +1,47 @@
 import Head from 'next/head'
 import Link from 'next/link'
-import { Navbar } from '../components/Navbar'
+import { Navbar, Post } from '../components'
 import styled from 'styled-components'
 
-const Title = styled.h1`
-    color: #3375;
+// const Title = styled.h1`
+//     color: #3375;
+// `
+
+const Wraper = styled.div`
+    background: #EEF5FF;
+    min-height: 100vh;
+    width: 100%;
 `
 
+const PostWrapper = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    column-gap: 30px;
+`
 export default function Home() {
     return (
-        <div className="container">
-            {/* <Head>
-                <title>Create Next App</title>
-                <link rel="icon" href="/favicon.ico" />
-                <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;500;700&display=swap" rel="stylesheet" />
-                <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet" />
-
-            </Head> */}
-
+        <div>
+            <Head>
+                <title>Home</title>
+            </Head>
             <Navbar />
-            <Link href="/blog">
-                <a>
-                    <h1>
-                        Blog
-                    </h1>
-                </a>
-            </Link>
-            <Title>Home</Title>
+            <Wraper>
+                <div className="container">
+                    <PostWrapper>
+                        {/* <Link href="/blog">
+                        </Link> */}
+                        <Post images={"/static/images/4.png"} title='Мальдивы. Рай или пафос ? ' />
+                        <Post images={"/static/images/5.png"} title='Италия. Остров Капри. Обзор. ' />
+                        <Post images={"/static/images/6.png"} title='США. Сан-Франциско,  дорого ?' />
+                        <Post images={"/static/images/7.png"} title='Канада. Пейзажи вблизи Онтарио.' />
+                        <Post images={"/static/images/8.png"} title='Швейцария.  Красота природы.' />
+                        <Post images={"/static/images/9.png"} title='Альпы.  Покори вершину с нами !' />
+
+                    </PostWrapper>
+
+                </div>
+            </Wraper>
         </div>
     )
 }
