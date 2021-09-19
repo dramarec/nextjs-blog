@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Post } from '../components/Post';
 
 const Wraper = styled.div`
-    background: #EEF5FF;
+    background: ${COLORS.background};
     min-height: 100vh;
     width: 100%;
 `
@@ -23,7 +23,7 @@ const Blog = () => {
                 <title>Blog title</title>
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-           
+
         </>
     );
 }

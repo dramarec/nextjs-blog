@@ -2,13 +2,12 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { Navbar, Post } from '../components'
 import styled from 'styled-components'
+import { COLORS } from '../public/colors'
 
-// const Title = styled.h1`
-//     color: #3375;
-// `
 
 const Wraper = styled.div`
-    background: #EEF5FF;
+    background: ${COLORS.background3};
+    /* background: #EEF5FF; */
     min-height: 100vh;
     width: 100%;
 `
