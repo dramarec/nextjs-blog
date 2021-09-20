@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import styled from 'styled-components'
 import { COLORS } from "../public/colors";
 
@@ -16,14 +17,13 @@ const Logo = styled.a`
     font-size: 18px;
     line-height: 21px;
     color: ${COLORS.color};
+    cursor: pointer;
 `
 
 const AddPostBtn = styled.button`
     position: absolute;
     width: 139px;
     height: 25px;
-    /* left: calc(50% - 139px/2 - 13.5px); */
-    /* top: 43px; */
 
     color: ${COLORS.white};
     background: ${COLORS.background2};
@@ -35,7 +35,7 @@ const AddPostBtn = styled.button`
     left: 43%;
     top: 25px;
     cursor: pointer;
-    transition:  250ms cubic-bezier(0.4, 0, 0.2, 1);
+    transition: 250ms cubic-bezier(0.4, 0, 0.2, 1);
     :hover {
         box-shadow: 0px 10px 25px rgba(148, 174, 213, 0.5);
     }
@@ -47,8 +47,13 @@ export const Navbar = () => {
         <Nav>
             <div className="container">
                 <NabarItem>
-                    <Logo>NEXT | BLOG</Logo>
-                    <AddPostBtn>Добавить статью</AddPostBtn>
+                    <Link href='/'>
+                        <Logo>NEXT | BLOG</Logo>
+                    </Link>
+                    <Link href='/add-post'>
+                        <AddPostBtn>Добавить статью</AddPostBtn>
+                    </Link>
+
                 </NabarItem>
             </div>
         </Nav>

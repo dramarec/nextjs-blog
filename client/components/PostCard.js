@@ -9,8 +9,8 @@ const Card = styled.a`
     margin-top: 50px;
     position: relative;
     cursor: pointer;
-    transition: /* opacity transform */ 250ms cubic-bezier(0.4, 0, 0.2, 1);
-    /* transition: 0.3s all ease; */
+    transition:  250ms cubic-bezier(0.4, 0, 0.2, 1);
+    background: url('${props => props.bgImage}') center / cover no-repeat; 
     :hover {
         transform: scale(1.1);
     }
@@ -33,12 +33,12 @@ const PostTitle = styled.div`
 `
 
 
-export const Post = ({ images, title }) => {
+export const PostCard = ({ image, title }) => {
     return (
-        <Card>
+        <Card bgImage={image}>
             <Image
                 alt="Mountains"
-                src={images}
+                src={image}
                 layout="fill"
                 objectFit="cover"
                 quality={100}

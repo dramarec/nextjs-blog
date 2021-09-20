@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import Link from 'next/link'
 import styled from 'styled-components';
 import { Navbar } from '../components';
 import { COLORS } from '../public/colors';
@@ -12,8 +13,6 @@ const PostWrapper = styled.div`
 const BtnBack = styled.button`
     width: 117px;
     height: 45px;
-    /* left: calc(50% - 117px/2 - 496.5px); */
-    /* top: 85px; */
 
     background: ${COLORS.white};
     box-shadow: 0px 10px 25px rgba(148, 174, 213, 0.15);
@@ -34,13 +33,9 @@ const BtnBack = styled.button`
     cursor: pointer;
     margin-top: 30px;
     outline: none;
-    transition: /* opacity transform */ 250ms cubic-bezier(0.4, 0, 0.2, 1);
-    /* transform: scaleX(0); */
-    /* transition-duration: 2500ms; */
-    /* transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); */
+    transition: 250ms cubic-bezier(0.4, 0, 0.2, 1);
     :hover {
-    box-shadow: 0px 10px 25px rgba(148, 174, 213, 0.5);
-    /* transition: 3s all ease; */
+        box-shadow: 0px 10px 25px rgba(148, 174, 213, 0.5);
     }
 `
 
@@ -56,7 +51,7 @@ const Form = styled.form`
     height: 447px;
     padding: 30px;
 
-    background: #FFFFFF;
+    background: ${COLORS.white};
     border-radius: 15px;
 `
 
@@ -66,8 +61,8 @@ const InputField = styled.div`
     margin-bottom: 15px;
 `
 const Input = styled.input`
-    width: 100%;
     display: flex;
+    width: 100%;
     height: 33px;
 
     border: 1px solid #E5E5E5;
@@ -96,7 +91,7 @@ const TeaxtArea = styled.textarea`
 const FormBtn = styled.button`
     width: 139px;
     height: 33px;
-    background: #67BFFF;
+    background: ${COLORS.background2};
     color: ${COLORS.white};
     box-shadow: 0px 10px 25px rgba(148, 174, 213, 0.15);
     border-radius: 10px;
@@ -106,26 +101,27 @@ const FormBtn = styled.button`
     margin-right: auto;
     cursor: pointer;
     outline: none;
-    transition:  250ms cubic-bezier(0.4, 0, 0.2, 1);
+    transition: 250ms cubic-bezier(0.4, 0, 0.2, 1);
     :hover {
         box-shadow: 0px 10px 25px rgba(148, 174, 213, 0.5);
     }
 `
-
 
 export default function AddPost() {
     return (
         <PostWrapper>
             <Navbar />
             <div className="container">
-                <BtnBack>
-                    <Image
-                        src='/static/back.svg'
-                        width={24}
-                        height={15}
-                    />
-                    Назад
-                </BtnBack>
+                <Link href='/'>
+                    <BtnBack>
+                        <Image
+                            src='/static/back.svg'
+                            width={24}
+                            height={15}
+                        />
+                        Назад
+                    </BtnBack>
+                </Link>
 
                 <FormWrapper>
                     <Form>
