@@ -17,7 +17,7 @@ router
             res.json(post)
 
         } catch (error) {
-            console.log("🔥🚀 ===> router.post ===> error", error);
+            console.log("🔥🚀 ===> post ===> error", error);
 
         }
     })
@@ -28,7 +28,7 @@ router
 
             res.json(getAllPosts)
         } catch (error) {
-            console.log("🔥🚀 ===> .get ===> error", error);
+            console.log("🔥🚀 ===> getAll ===> error", error);
 
         }
     })
@@ -42,6 +42,18 @@ router
             res.json(getPostById)
         } catch (error) {
             console.log("🔥🚀 ===> findById ===> error", error);
+
+        }
+    })
+    .post('/remove', async (req, res) => {
+        try {
+            const { id } = req.body
+            const post = await Post.findByIdAndDelete(id) 
+            console.log("🔥🚀 ===> REMOVE ===> post", post);
+
+            res.json({ message: 'success' })
+        } catch (error) {
+            console.log("🔥🚀 ===> remove ===> error", error);
 
         }
     })

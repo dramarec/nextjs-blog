@@ -4,6 +4,7 @@ import Head from 'next/head';
 import Link from 'next/link'
 import Image from 'next/image'
 import styled from 'styled-components';
+import axios from 'axios';
 
 import { Navbar, PostCard } from '../../components';
 import { COLORS } from '../../public/colors';
@@ -48,8 +49,9 @@ export default function Post({ post: serverPost }) {
 
     useEffect(() => {
         async function load() {
-            const response = await fetch(`http://localhost:4300/posts/${id}`)
+            const response = await fetch(`http://localhost:5000/api/post/${id}`)
             const data = await response.json()
+            console.log("🔥🚀 ===> load ===> data", data);
             setPost(data)
 
         }
@@ -61,6 +63,13 @@ export default function Post({ post: serverPost }) {
     if (!post) {
         return <h2>Loading posts</h2>
     }
+
+    const removePost = async () => {
+        await axios.post(`http://localhost:5000/api/post/remove`, {
+            id: post._id
+        }).then(() => router.push('/'))
+    }
+
 
     return (
         <Wrapper>
@@ -80,6 +89,10 @@ export default function Post({ post: serverPost }) {
                         Назад
                     </BtnBack>
                 </Link>
+
+                <BtnBack onClick={removePost}>
+                    Удалить
+                </BtnBack>
 
                 <h1>Post : {post.title}</h1>
 
