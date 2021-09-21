@@ -1,25 +1,23 @@
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import Head from 'next/head'
 import Link from 'next/link'
-import { Navbar, PostCard } from '../components'
 import styled from 'styled-components'
-import { COLORS } from '../public/colors'
-import Image from 'next/image'
 
+import { Navbar } from '../components'
+import { COLORS } from '../public/colors'
 
 const Wrapper = styled.div`
     background: ${COLORS.background3};
     min-height: 100vh;
     width: 100%;
 `
-
 const PostWrapper = styled.div`
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
     column-gap: 30px;
 `
-
 const Card = styled.a`
     width: 350px;
     height: 270px;
@@ -33,7 +31,6 @@ const Card = styled.a`
         transform: scale(1.1);
     }
 `
-
 const PostTitle = styled.div`
     font-weight: 700;
     text-align: center;
@@ -52,11 +49,10 @@ const PostTitle = styled.div`
 
 export default function Home({ posts: serverPosts }) {
     const [posts, setPosts] = useState(serverPosts)
-    console.log("🔥🚀 ===> Home ===> posts", posts);
 
     useEffect(() => {
         async function load() {
-            const response = await fetch('http://localhost:4300/posts')
+            const response = await fetch('http://localhost:5000/api/post')
             const data = await response.json();
             console.log("🔥🚀 ===> load ===> data", data);
             setPosts(data)
@@ -75,11 +71,11 @@ export default function Home({ posts: serverPosts }) {
         return (
             posts?.map((post, idx) => {
                 return (
-                    <Link href='/post/[id]' as={`/post/${post.id}`} key={idx}>
+                    <Link href='/post/[id]' as={`/post/${post._id}`} key={idx}>
                         <Card >
                             <Image
                                 alt="Mountains"
-                                src={post.images}
+                                src={post.image}
                                 layout="fill"
                                 objectFit="cover"
                                 quality={100}
@@ -89,15 +85,12 @@ export default function Home({ posts: serverPosts }) {
                             </PostTitle>
                         </Card>
 
-                        {/* <PostCard image={post.images} title={post.title} /> */}
                     </Link>
                 )
             })
 
         )
     }
-
-
 
     return (
         <div>
@@ -108,13 +101,6 @@ export default function Home({ posts: serverPosts }) {
             <Wrapper>
                 <div className="container">
                     <PostWrapper>
-                        {/* <Image
-                            alt="Mountains"
-                            src="https://www.superherodb.com/pictures2/portraits/10/100/891.jpg"
-                            layout="fill"
-                            objectFit="cover"
-                            quality={100}
-                        /> */}
                         {posts ? PostCard() : null}
 
                         {/* {posts.map((post, idx) => (
@@ -140,14 +126,31 @@ export default function Home({ posts: serverPosts }) {
     )
 }
 
-Home.getInitialProps = async (ctx) => {
-    console.log("🔥🚀 ===> Home.getInitialProps= ===> ctx", ctx);
-    if (!ctx.req) {
-        return { posts: null }
+export async function getServerSideProps() {
+    const res = await fetch(`http://localhost:5000/api/post`)
+    const posts = await res.json()
+
+    if (!posts) {
+        return {
+            notFound: true,
+        }
     }
-    const response = await fetch('http://localhost:4300/posts')
-    const posts = await response.json();
+
     return {
-        posts
+        props: {
+            posts
+        }, // will be passed to the page component as props
     }
 }
+
+// Home.getInitialProps = async (ctx) => {
+//     console.log("🔥🚀 ===> Home.getInitialProps= ===> ctx", ctx);
+//     if (!ctx.req) {
+//         return { posts: null }
+//     }
+//     const response = await fetch('http://localhost:5000/api/post')
+//     const posts = await response.json();
+//     return {
+//         posts
+//     }
+// }

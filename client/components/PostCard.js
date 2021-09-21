@@ -1,16 +1,16 @@
-import styled from 'styled-components';
 import Image from 'next/image'
+import styled from 'styled-components';
+
 import { COLORS } from "../public/colors";
 
 const Card = styled.a`
     width: 350px;
-    height: 270px;
+    height: auto;
     border-radius: 15px;
     margin-top: 50px;
     position: relative;
     cursor: pointer;
     transition:  250ms cubic-bezier(0.4, 0, 0.2, 1);
-    background: url('${props => props.bgImage}') center / cover no-repeat; 
     :hover {
         transform: scale(1.1);
     }
@@ -32,11 +32,9 @@ const PostTitle = styled.div`
     padding:15px 20px;
 `
 
-export const PostCard = ({ image, title, }) => {
+export const PostCard = ({ image, title, text }) => {
     return (
-        <Card
-        // bgImage={image}
-        >
+        <Card>
             <Image
                 alt="Card"
                 src={image}
@@ -46,8 +44,10 @@ export const PostCard = ({ image, title, }) => {
                 height={470}
             />
             <PostTitle>
-                <p> {title}</p>
+                <p> Title: {title}</p>
+                <p> Text: {text}</p>
             </PostTitle>
+
         </Card>
     )
 }

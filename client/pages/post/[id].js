@@ -1,18 +1,18 @@
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router'
 import Head from 'next/head';
+import Link from 'next/link'
 import Image from 'next/image'
 import styled from 'styled-components';
-import { useRouter } from 'next/router'
+
 import { Navbar, PostCard } from '../../components';
 import { COLORS } from '../../public/colors';
-import Link from 'next/link'
-import { useEffect, useState } from 'react';
 
 const Wrapper = styled.div`
     background:${COLORS.background3};
     min-height: 100vh;
     width: 100%;
-`;
-
+`
 const BtnBack = styled.button`
     width: 117px;
     height: 45px;
@@ -42,14 +42,13 @@ const BtnBack = styled.button`
 `
 export default function Post({ post: serverPost }) {
     const [post, setPost] = useState(serverPost)
-    console.log("🔥🚀 ===> Post ===> post", post);
 
     const router = useRouter()
     const { id } = router.query
 
     useEffect(() => {
         async function load() {
-            const response = await fetch(`http://localhost:4300/posts/${router.query.id}`)
+            const response = await fetch(`http://localhost:4300/posts/${id}`)
             const data = await response.json()
             setPost(data)
 
@@ -66,7 +65,7 @@ export default function Post({ post: serverPost }) {
     return (
         <Wrapper>
             <Head>
-                <title>Post: {id}</title>
+                <title>Post: {post.title}</title>
             </Head>
 
             <Navbar />
@@ -84,30 +83,47 @@ export default function Post({ post: serverPost }) {
 
                 <h1>Post : {post.title}</h1>
 
-                {/* <Image
+                <Image
                     alt="Card"
-                    src={post.images}
+                    src={post.image}
                     // layout="fill"
                     objectFit="cover"
                     quality={100}
                     width={700}
                     height={470}
-                /> */}
+                />
 
-                <PostCard image={post.images} title={post.title} />
+                <PostCard image={post.image} title={post.title} text={post.text} />
 
             </div>
         </Wrapper>
     )
 }
 
-Post.getInitialProps = async ({ query, req }) => {
-    if (!req) {
-        return { post: null }
+export async function getServerSideProps({ query }) {
+    const res = await fetch(`http://localhost:5000/api/post/${query.id}`)
+    const post = await res.json()
+
+    if (!post) {
+        return {
+            notFound: true,
+        }
     }
-    const response = await fetch(`http://localhost:4300/posts/${query.id}`)
-    const post = await response.json();
+
     return {
-        post
+        props: {
+            post
+        }, // will be passed to the page component as props
     }
 }
+
+// Post.getInitialProps = async ({ query, req }) => {
+//     if (!req) {
+//         return { post: null }
+//     }
+//     const response = await fetch(`http://localhost:4300/posts/${query.id}`)
+//     const post = await response.json();
+//     return {
+//         post
+//     }
+// }
