@@ -1,0 +1,19 @@
+{
+  "posts": [
+    {
+      "id": "1",
+      "title": "Post #1",
+      "images": "https://www.superherodb.com/pictures2/portraits/10/100/639.jpg"
+    },
+    {
+      "id": "2",
+      "title": "Post #2",
+      "images": "https://www.superherodb.com/pictures2/portraits/10/100/791.jpg"
+    },
+    {
+      "id": "3",
+      "title": "Post #3",
+      "images": "https://www.superherodb.com/pictures2/portraits/10/100/891.jpg"
+    }
+  ]
+}

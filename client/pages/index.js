@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import { Navbar, PostCard } from '../components'
@@ -49,29 +50,30 @@ const PostTitle = styled.div`
     padding:15px 20px;
 `
 
-export default function Home() {
+export default function Home({ posts: serverPosts }) {
+    const [posts, setPosts] = useState(serverPosts)
+    console.log("🔥🚀 ===> Home ===> posts", posts);
 
-    const posts = [
-        {
-            id: '1',
-            title: 'Post #1',
-            images: "https://www.superherodb.com/pictures2/portraits/10/100/639.jpg"
-        },
-        {
-            id: '2',
-            title: 'Post #2',
-            images: "https://www.superherodb.com/pictures2/portraits/10/100/791.jpg"
-        },
-        {
-            id: '3',
-            title: 'Post #3',
-            images: "https://www.superherodb.com/pictures2/portraits/10/100/891.jpg"
-        },
-    ]
+    useEffect(() => {
+        async function load() {
+            const response = await fetch('http://localhost:4300/posts')
+            const data = await response.json();
+            console.log("🔥🚀 ===> load ===> data", data);
+            setPosts(data)
+        }
+
+        if (!serverPosts) {
+            load()
+        }
+    }, [])
+
+    if (!posts || posts === null) {
+        return <h2>Loading POSTS..........</h2>
+    }
 
     function PostCard() {
         return (
-            posts.map((post, idx) => {
+            posts?.map((post, idx) => {
                 return (
                     <Link href='/post/[id]' as={`/post/${post.id}`} key={idx}>
                         <Card >
@@ -113,9 +115,9 @@ export default function Home() {
                             objectFit="cover"
                             quality={100}
                         /> */}
-                        {PostCard()}
+                        {posts ? PostCard() : null}
 
-                        {posts.map((post, idx) => (
+                        {/* {posts.map((post, idx) => (
                             <Link href='/post/[id]' as={`/post/${post.id}`} key={idx}>
                                 <Card >
                                     <Image
@@ -130,10 +132,22 @@ export default function Home() {
                                     </PostTitle>
                                 </Card>
                             </Link>
-                        ))}
+                        ))} */}
                     </PostWrapper>
                 </div>
             </Wrapper>
         </div>
     )
+}
+
+Home.getInitialProps = async (ctx) => {
+    console.log("🔥🚀 ===> Home.getInitialProps= ===> ctx", ctx);
+    if (!ctx.req) {
+        return { posts: null }
+    }
+    const response = await fetch('http://localhost:4300/posts')
+    const posts = await response.json();
+    return {
+        posts
+    }
 }

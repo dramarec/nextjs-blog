@@ -24,7 +24,7 @@ const PostTitle = styled.div`
     font-style: normal;
     color: ${COLORS.color};
     position: absolute;
-    left: 0;
+    left: 0; 
     right: 0;
     bottom: 0;
     background: ${COLORS.background};
@@ -32,16 +32,18 @@ const PostTitle = styled.div`
     padding:15px 20px;
 `
 
-
-export const PostCard = ({ image, title }) => {
+export const PostCard = ({ image, title, }) => {
     return (
-        <Card bgImage={image}>
+        <Card
+        // bgImage={image}
+        >
             <Image
-                alt="Mountains"
+                alt="Card"
                 src={image}
-                layout="fill"
                 objectFit="cover"
                 quality={100}
+                width={700}
+                height={470}
             />
             <PostTitle>
                 <p> {title}</p>
@@ -49,3 +51,4 @@ export const PostCard = ({ image, title }) => {
         </Card>
     )
 }
+

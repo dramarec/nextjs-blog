@@ -1,9 +1,11 @@
+import Head from 'next/head';
 import Image from 'next/image'
 import styled from 'styled-components';
 import { useRouter } from 'next/router'
-import { Navbar } from '../../components';
+import { Navbar, PostCard } from '../../components';
 import { COLORS } from '../../public/colors';
 import Link from 'next/link'
+import { useEffect, useState } from 'react';
 
 const Wrapper = styled.div`
     background:${COLORS.background3};
@@ -38,14 +40,35 @@ const BtnBack = styled.button`
         box-shadow: 0px 10px 25px rgba(148, 174, 213, 0.5);
     }
 `
+export default function Post({ post: serverPost }) {
+    const [post, setPost] = useState(serverPost)
+    console.log("🔥🚀 ===> Post ===> post", post);
 
-export default function Post() {
     const router = useRouter()
-    console.log("🔥🚀 ===> Post ===> router", router);
     const { id } = router.query
+
+    useEffect(() => {
+        async function load() {
+            const response = await fetch(`http://localhost:4300/posts/${router.query.id}`)
+            const data = await response.json()
+            setPost(data)
+
+        }
+        if (!serverPost) {
+            load()
+        }
+    }, [])
+
+    if (!post) {
+        return <h2>Loading posts</h2>
+    }
 
     return (
         <Wrapper>
+            <Head>
+                <title>Post: {id}</title>
+            </Head>
+
             <Navbar />
             <div className="container">
                 <Link href='/'>
@@ -59,8 +82,32 @@ export default function Post() {
                     </BtnBack>
                 </Link>
 
-                <h1>Post : {id}</h1>
+                <h1>Post : {post.title}</h1>
+
+                {/* <Image
+                    alt="Card"
+                    src={post.images}
+                    // layout="fill"
+                    objectFit="cover"
+                    quality={100}
+                    width={700}
+                    height={470}
+                /> */}
+
+                <PostCard image={post.images} title={post.title} />
+
             </div>
         </Wrapper>
     )
+}
+
+Post.getInitialProps = async ({ query, req }) => {
+    if (!req) {
+        return { post: null }
+    }
+    const response = await fetch(`http://localhost:4300/posts/${query.id}`)
+    const post = await response.json();
+    return {
+        post
+    }
 }
