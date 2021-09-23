@@ -3,6 +3,24 @@ import styled from 'styled-components'
 
 import { COLORS } from "../public/colors";
 
+export const Navbar = () => {
+    return (
+        <Nav>
+            <div className="container">
+                <NabarItem>
+                    <Link href='/'>
+                        <Logo>NEXT | BLOG</Logo>
+                    </Link>
+                    <Link href='/add-post'>
+                        <AddPostBtn>Добавить статью</AddPostBtn>
+                    </Link>
+
+                </NabarItem>
+            </div>
+        </Nav>
+    )
+}
+
 const Nav = styled.nav`
     background: ${COLORS.background};
     padding: 17px 0;
@@ -41,22 +59,3 @@ const AddPostBtn = styled.button`
         box-shadow: 0px 10px 25px rgba(148, 174, 213, 0.5);
     }
 `
-
-
-export const Navbar = () => {
-    return (
-        <Nav>
-            <div className="container">
-                <NabarItem>
-                    <Link href='/'>
-                        <Logo>NEXT | BLOG</Logo>
-                    </Link>
-                    <Link href='/add-post'>
-                        <AddPostBtn>Добавить статью</AddPostBtn>
-                    </Link>
-
-                </NabarItem>
-            </div>
-        </Nav>
-    )
-}
