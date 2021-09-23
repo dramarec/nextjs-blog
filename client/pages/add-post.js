@@ -108,15 +108,17 @@ const FormBtn = styled.button`
 
 export default function AddPost() {
     const [title, setTitle] = useState('')
-    const [text, setText] = useState('')
+    const [description, setDescription] = useState('')
     const [image, setImage] = useState('')
     const router = useRouter()
 
     const addPost = async () => {
         try {
-            await axios.post('http://localhost:5000/api/post/add', {
-                title, text, image
-            }).then(() => router.push('/'))
+            await axios.post('http://localhost:5000/api/post/add',
+                {
+                    title, description, image
+                }
+            ).then(() => router.push('/'))
 
         } catch (error) {
             console.log("🔥🚀 ===> addPost ===> error", error);
@@ -150,7 +152,7 @@ export default function AddPost() {
 
                         <InputField>
                             <TextLabel>Текст статьи:</TextLabel>
-                            <TeaxtArea onChange={e => setText(e.target.value)} />
+                            <TeaxtArea onChange={e => setDescription(e.target.value)} />
                         </InputField>
 
                         <InputField>

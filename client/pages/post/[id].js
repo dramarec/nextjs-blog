@@ -96,47 +96,47 @@ export default function Post({ post: serverPost }) {
 
                 <h1>Post : {post.title}</h1>
 
-                <Image
+                {/* <Image
                     alt="Card"
-                    src={post.image}
+                    src={post.image + `?sig=${post._id}`}
                     // layout="fill"
                     objectFit="cover"
                     quality={100}
                     width={700}
                     height={470}
-                />
+                /> */}
 
-                <PostCard image={post.image} title={post.title} text={post.text} />
+                <PostCard image={post.image + `?sig=${post._id}`} title={post.title} description={post.description} />
 
             </div>
         </Wrapper>
     )
 }
 
-export async function getServerSideProps({ query }) {
-    const res = await fetch(`http://localhost:5000/api/post/${query.id}`)
-    const post = await res.json()
+// export async function getServerSideProps({ query }) {
+//     const res = await fetch(`http://localhost:5000/api/post/${query.id}`)
+//     const post = await res.json()
 
-    if (!post) {
-        return {
-            notFound: true,
-        }
-    }
-
-    return {
-        props: {
-            post
-        }, // will be passed to the page component as props
-    }
-}
-
-// Post.getInitialProps = async ({ query, req }) => {
-//     if (!req) {
-//         return { post: null }
+//     if (!post) {
+//         return {
+//             notFound: true,
+//         }
 //     }
-//     const response = await fetch(`http://localhost:4300/posts/${query.id}`)
-//     const post = await response.json();
+
 //     return {
-//         post
+//         props: {
+//             post
+//         }, // will be passed to the page component as props
 //     }
 // }
+
+Post.getInitialProps = async ({ query, req }) => {
+    if (!req) {
+        return { post: null }
+    }
+    const response = await fetch(`http://localhost:4300/posts/${query.id}`)
+    const post = await response.json();
+    return {
+        post
+    }
+}

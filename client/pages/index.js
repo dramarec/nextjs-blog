@@ -75,7 +75,7 @@ export default function Home({ posts: serverPosts }) {
                         <Card >
                             <Image
                                 alt="Mountains"
-                                src={post.image}
+                                src={post.image + `?sig=${post._id}`}
                                 layout="fill"
                                 objectFit="cover"
                                 quality={100}
@@ -102,23 +102,6 @@ export default function Home({ posts: serverPosts }) {
                 <div className="container">
                     <PostWrapper>
                         {posts ? PostCard() : null}
-
-                        {/* {posts.map((post, idx) => (
-                            <Link href='/post/[id]' as={`/post/${post.id}`} key={idx}>
-                                <Card >
-                                    <Image
-                                        alt="Mountains"
-                                        src={post.images}
-                                        layout="fill"
-                                        objectFit="cover"
-                                        quality={100}
-                                    />
-                                    <PostTitle>
-                                        <p>{post.title}</p>
-                                    </PostTitle>
-                                </Card>
-                            </Link>
-                        ))} */}
                     </PostWrapper>
                 </div>
             </Wrapper>
@@ -126,31 +109,31 @@ export default function Home({ posts: serverPosts }) {
     )
 }
 
-export async function getServerSideProps() {
-    const res = await fetch(`http://localhost:5000/api/post`)
-    const posts = await res.json()
+// export async function getServerSideProps() {
+//     const res = await fetch(`http://localhost:5000/api/post`)
+//     const posts = await res.json()
 
-    if (!posts) {
-        return {
-            notFound: true,
-        }
-    }
-
-    return {
-        props: {
-            posts
-        }, // will be passed to the page component as props
-    }
-}
-
-// Home.getInitialProps = async (ctx) => {
-//     console.log("🔥🚀 ===> Home.getInitialProps= ===> ctx", ctx);
-//     if (!ctx.req) {
-//         return { posts: null }
+//     if (!posts) {
+//         return {
+//             notFound: true,
+//         }
 //     }
-//     const response = await fetch('http://localhost:5000/api/post')
-//     const posts = await response.json();
+
 //     return {
-//         posts
+//         props: {
+//             posts
+//         }, // will be passed to the page component as props
 //     }
 // }
+
+Home.getInitialProps = async (ctx) => {
+    console.log("🔥🚀 ===> Home.getInitialProps= ===> ctx", ctx);
+    if (!ctx.req) {
+        return { posts: null }
+    }
+    const response = await fetch('http://localhost:5000/api/post')
+    const posts = await response.json();
+    return {
+        posts
+    }
+}

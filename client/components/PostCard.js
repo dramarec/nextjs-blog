@@ -32,7 +32,7 @@ const PostTitle = styled.div`
     padding:15px 20px;
 `
 
-export const PostCard = ({ image, title, text }) => {
+export const PostCard = ({ image, title, description }) => {
     return (
         <Card>
             <Image
@@ -45,7 +45,7 @@ export const PostCard = ({ image, title, text }) => {
             />
             <PostTitle>
                 <p> Title: {title}</p>
-                <p> Text: {text}</p>
+                <p> Text: {description}</p>
             </PostTitle>
 
         </Card>

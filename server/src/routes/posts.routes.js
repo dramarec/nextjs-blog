@@ -8,10 +8,10 @@ router
     .post('/add', async (req, res) => {
         try {
 
-            const { title, text, image } = req.body
+            const { title, description, image } = req.body
 
             const post = new Post({
-                title, text, image
+                title, description, image
             })
             await post.save()
             res.json(post)
