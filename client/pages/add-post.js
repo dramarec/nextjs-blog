@@ -1,6 +1,11 @@
+import { useState } from 'react';
+import { useRouter } from 'next/router';
+import Head from 'next/head';
 import Image from 'next/image'
 import Link from 'next/link'
+import axios from 'axios'
 import styled from 'styled-components';
+
 import { Navbar } from '../components';
 import { COLORS } from '../public/colors';
 
@@ -8,8 +13,7 @@ const PostWrapper = styled.div`
     background:${COLORS.background3};
     min-height: 100vh;
     width: 100%;
-`;
-
+`
 const BtnBack = styled.button`
     width: 117px;
     height: 45px;
@@ -38,14 +42,12 @@ const BtnBack = styled.button`
         box-shadow: 0px 10px 25px rgba(148, 174, 213, 0.5);
     }
 `
-
 const FormWrapper = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
     margin-top: 120px;
 `
-
 const Form = styled.form`
     width: 500px;
     height: 447px;
@@ -54,7 +56,6 @@ const Form = styled.form`
     background: ${COLORS.white};
     border-radius: 15px;
 `
-
 const InputField = styled.div`
     display: flex;
     flex-direction: column;
@@ -68,7 +69,6 @@ const Input = styled.input`
     border: 1px solid #E5E5E5;
     border-radius: 5px;
 `
-
 const TextLabel = styled.div`
     font-style: normal;
     font-weight: 300;
@@ -77,7 +77,6 @@ const TextLabel = styled.div`
     margin-bottom: 5px;
     color: #222222;
 `
-
 const TeaxtArea = styled.textarea`
     width: 440px;
     height: 150px;
@@ -108,8 +107,29 @@ const FormBtn = styled.button`
 `
 
 export default function AddPost() {
+    const [title, setTitle] = useState('')
+    const [description, setDescription] = useState('')
+    const [image, setImage] = useState('')
+    const router = useRouter()
+
+    const addPost = async () => {
+        try {
+            await axios.post('http://localhost:5000/api/post/add',
+                {
+                    title, description, image
+                }
+            ).then(() => router.push('/'))
+
+        } catch (error) {
+            console.log("🔥🚀 ===> addPost ===> error", error);
+        }
+    }
+
     return (
         <PostWrapper>
+            <Head>
+                <title>Add Post</title>
+            </Head>
             <Navbar />
             <div className="container">
                 <Link href='/'>
@@ -124,23 +144,24 @@ export default function AddPost() {
                 </Link>
 
                 <FormWrapper>
-                    <Form>
+                    <Form onSubmit={e => e.preventDefault()}>
                         <InputField>
                             <TextLabel>Название статьи:</TextLabel>
-                            <Input />
+                            <Input onChange={e => setTitle(e.target.value)} />
                         </InputField>
 
                         <InputField>
                             <TextLabel>Текст статьи:</TextLabel>
-                            <TeaxtArea></TeaxtArea>
+                            <TeaxtArea onChange={e => setDescription(e.target.value)} />
                         </InputField>
 
                         <InputField>
                             <TextLabel>URL картинки:</TextLabel>
-                            <Input />
+                            <Input onChange={e => setImage(e.target.value)} />
                         </InputField>
+
                         <InputField>
-                            <FormBtn>Добавить</FormBtn>
+                            <FormBtn onClick={addPost}>Добавить</FormBtn>
                         </InputField>
                     </Form>
                 </FormWrapper>
@@ -148,3 +169,4 @@ export default function AddPost() {
         </PostWrapper>
     )
 }
+

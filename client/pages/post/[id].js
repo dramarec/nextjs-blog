@@ -1,18 +1,19 @@
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router'
 import Head from 'next/head';
+import Link from 'next/link'
 import Image from 'next/image'
 import styled from 'styled-components';
-import { useRouter } from 'next/router'
+import axios from 'axios';
+
 import { Navbar, PostCard } from '../../components';
 import { COLORS } from '../../public/colors';
-import Link from 'next/link'
-import { useEffect, useState } from 'react';
 
 const Wrapper = styled.div`
     background:${COLORS.background3};
     min-height: 100vh;
     width: 100%;
-`;
-
+`
 const BtnBack = styled.button`
     width: 117px;
     height: 45px;
@@ -42,15 +43,15 @@ const BtnBack = styled.button`
 `
 export default function Post({ post: serverPost }) {
     const [post, setPost] = useState(serverPost)
-    console.log("🔥🚀 ===> Post ===> post", post);
 
     const router = useRouter()
     const { id } = router.query
 
     useEffect(() => {
         async function load() {
-            const response = await fetch(`http://localhost:4300/posts/${router.query.id}`)
+            const response = await fetch(`http://localhost:5000/api/post/${id}`)
             const data = await response.json()
+            console.log("🔥🚀 ===> load ===> data", data);
             setPost(data)
 
         }
@@ -63,10 +64,17 @@ export default function Post({ post: serverPost }) {
         return <h2>Loading posts</h2>
     }
 
+    const removePost = async () => {
+        await axios.post(`http://localhost:5000/api/post/remove`, {
+            id: post._id
+        }).then(() => router.push('/'))
+    }
+
+
     return (
         <Wrapper>
             <Head>
-                <title>Post: {id}</title>
+                <title>Post: {post.title}</title>
             </Head>
 
             <Navbar />
@@ -82,11 +90,15 @@ export default function Post({ post: serverPost }) {
                     </BtnBack>
                 </Link>
 
+                <BtnBack onClick={removePost}>
+                    Удалить
+                </BtnBack>
+
                 <h1>Post : {post.title}</h1>
 
                 {/* <Image
                     alt="Card"
-                    src={post.images}
+                    src={post.image + `?sig=${post._id}`}
                     // layout="fill"
                     objectFit="cover"
                     quality={100}
@@ -94,12 +106,29 @@ export default function Post({ post: serverPost }) {
                     height={470}
                 /> */}
 
-                <PostCard image={post.images} title={post.title} />
+                <PostCard image={post.image + `?sig=${post._id}`} title={post.title} description={post.description} />
 
             </div>
         </Wrapper>
     )
 }
+
+// export async function getServerSideProps({ query }) {
+//     const res = await fetch(`http://localhost:5000/api/post/${query.id}`)
+//     const post = await res.json()
+
+//     if (!post) {
+//         return {
+//             notFound: true,
+//         }
+//     }
+
+//     return {
+//         props: {
+//             post
+//         }, // will be passed to the page component as props
+//     }
+// }
 
 Post.getInitialProps = async ({ query, req }) => {
     if (!req) {
