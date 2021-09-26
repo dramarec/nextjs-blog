@@ -3,6 +3,26 @@ import styled from 'styled-components';
 
 import { COLORS } from "../public/colors";
 
+export const PostCard = ({ image, title, description }) => {
+    return (
+        <Card>
+            <Image
+                alt="Card"
+                src={image}
+                objectFit="cover"
+                quality={100}
+                width={700}
+                height={470}
+            />
+            <PostTitle>
+                <p> Title: {title}</p>
+                <p> Text: {description}</p>
+            </PostTitle>
+
+        </Card>
+    )
+}
+
 const Card = styled.a`
     width: 350px;
     height: auto;
@@ -31,24 +51,3 @@ const PostTitle = styled.div`
     border-radius: 0px 0px 15px 15px;
     padding:15px 20px;
 `
-
-export const PostCard = ({ image, title, description }) => {
-    return (
-        <Card>
-            <Image
-                alt="Card"
-                src={image}
-                objectFit="cover"
-                quality={100}
-                width={700}
-                height={470}
-            />
-            <PostTitle>
-                <p> Title: {title}</p>
-                <p> Text: {description}</p>
-            </PostTitle>
-
-        </Card>
-    )
-}
-

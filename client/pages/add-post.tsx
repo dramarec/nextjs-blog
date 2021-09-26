@@ -9,6 +9,71 @@ import styled from 'styled-components';
 import { Navbar } from '../components';
 import { COLORS } from '../public/colors';
 
+export default function AddPost() {
+    const [title, setTitle] = useState('')
+    const [description, setDescription] = useState('')
+    const [image, setImage] = useState('')
+    const router = useRouter()
+
+    const addPost = async () => {
+        try {
+            await axios.post(`${process.env.API_URL}/post/add`,
+                {
+                    title, description, image
+                }
+            ).then(() => router.push('/'))
+
+        } catch (error) {
+            console.log("🔥🚀 ===> addPost ===> error", error);
+        }
+    }
+
+    return (
+        <PostWrapper>
+            <Head>
+                <title>Add Post</title>
+            </Head>
+            <Navbar />
+            <div className="container">
+                <Link href='/'>
+                    <BtnBack>
+                        <Image
+                            src='/static/back.svg'
+                            width={24}
+                            height={15}
+                        />
+                        Назад
+                    </BtnBack>
+                </Link>
+
+                <FormWrapper>
+                    <Form onSubmit={e => e.preventDefault()}>
+                        <InputField>
+                            <TextLabel>Название статьи:</TextLabel>
+                            <Input onChange={e => setTitle(e.target.value)} />
+                        </InputField>
+
+                        <InputField>
+                            <TextLabel>Текст статьи:</TextLabel>
+                            <TeaxtArea onChange={e => setDescription(e.target.value)} />
+                        </InputField>
+
+                        <InputField>
+                            <TextLabel>URL картинки:</TextLabel>
+                            <Input onChange={e => setImage(e.target.value)} />
+                        </InputField>
+
+                        <InputField>
+                            <FormBtn onClick={addPost}>Добавить</FormBtn>
+                        </InputField>
+                    </Form>
+                </FormWrapper>
+            </div>
+        </PostWrapper>
+    )
+}
+
+
 const PostWrapper = styled.div`
     background:${COLORS.background3};
     min-height: 100vh;
@@ -105,68 +170,3 @@ const FormBtn = styled.button`
         box-shadow: 0px 10px 25px rgba(148, 174, 213, 0.5);
     }
 `
-
-export default function AddPost() {
-    const [title, setTitle] = useState('')
-    const [description, setDescription] = useState('')
-    const [image, setImage] = useState('')
-    const router = useRouter()
-
-    const addPost = async () => {
-        try {
-            await axios.post('http://localhost:5000/api/post/add',
-                {
-                    title, description, image
-                }
-            ).then(() => router.push('/'))
-
-        } catch (error) {
-            console.log("🔥🚀 ===> addPost ===> error", error);
-        }
-    }
-
-    return (
-        <PostWrapper>
-            <Head>
-                <title>Add Post</title>
-            </Head>
-            <Navbar />
-            <div className="container">
-                <Link href='/'>
-                    <BtnBack>
-                        <Image
-                            src='/static/back.svg'
-                            width={24}
-                            height={15}
-                        />
-                        Назад
-                    </BtnBack>
-                </Link>
-
-                <FormWrapper>
-                    <Form onSubmit={e => e.preventDefault()}>
-                        <InputField>
-                            <TextLabel>Название статьи:</TextLabel>
-                            <Input onChange={e => setTitle(e.target.value)} />
-                        </InputField>
-
-                        <InputField>
-                            <TextLabel>Текст статьи:</TextLabel>
-                            <TeaxtArea onChange={e => setDescription(e.target.value)} />
-                        </InputField>
-
-                        <InputField>
-                            <TextLabel>URL картинки:</TextLabel>
-                            <Input onChange={e => setImage(e.target.value)} />
-                        </InputField>
-
-                        <InputField>
-                            <FormBtn onClick={addPost}>Добавить</FormBtn>
-                        </InputField>
-                    </Form>
-                </FormWrapper>
-            </div>
-        </PostWrapper>
-    )
-}
-

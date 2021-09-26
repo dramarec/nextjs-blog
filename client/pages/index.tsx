@@ -6,53 +6,19 @@ import styled from 'styled-components'
 
 import { Navbar } from '../components'
 import { COLORS } from '../public/colors'
+import { IPost } from '../types'
+import { NextPageContext } from 'next'
 
-const Wrapper = styled.div`
-    background: ${COLORS.background3};
-    min-height: 100vh;
-    width: 100%;
-`
-const PostWrapper = styled.div`
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    column-gap: 30px;
-`
-const Card = styled.a`
-    width: 350px;
-    height: 270px;
-    border-radius: 15px;
-    margin-top: 50px;
-    position: relative;
-    cursor: pointer;
-    transition:  500ms cubic-bezier(0.4, 0, 0.2, 1);
-    background: url('${props => props.bgImage}') center / cover no-repeat;
-    :hover {
-        transform: scale(1.1);
-    }
-`
-const PostTitle = styled.div`
-    font-weight: 700;
-    text-align: center;
-    font-size: 18px;
-    line-height: 21px;
-    font-style: normal;
-    color: ${COLORS.color};
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: ${COLORS.background};
-    border-radius: 0px 0px 15px 15px;
-    padding:15px 20px;
-`
+interface IProps {
+    posts: IPost[]
+}
 
-export default function Home({ posts: serverPosts }) {
+export default function Home({ posts: serverPosts }: IProps) {
     const [posts, setPosts] = useState(serverPosts)
 
     useEffect(() => {
         async function load() {
-            const response = await fetch('http://localhost:5000/api/post')
+            const response = await fetch(`${process.env.API_URL}/post`)
             const data = await response.json();
             console.log("🔥🚀 ===> load ===> data", data);
             setPosts(data)
@@ -109,8 +75,19 @@ export default function Home({ posts: serverPosts }) {
     )
 }
 
+Home.getInitialProps = async (ctx: NextPageContext) => {
+    if (!ctx.req) {
+        return { posts: null }
+    }
+    const response = await fetch(`${process.env.API_URL}/post`)
+    const posts = await response.json();
+    return {
+        posts
+    }
+}
+
 // export async function getServerSideProps() {
-//     const res = await fetch(`http://localhost:5000/api/post`)
+//     const res = await fetch(`${process.env.API_URL}/post`)
 //     const posts = await res.json()
 
 //     if (!posts) {
@@ -126,14 +103,44 @@ export default function Home({ posts: serverPosts }) {
 //     }
 // }
 
-Home.getInitialProps = async (ctx) => {
-    console.log("🔥🚀 ===> Home.getInitialProps= ===> ctx", ctx);
-    if (!ctx.req) {
-        return { posts: null }
+
+
+const Wrapper = styled.div`
+    background: ${COLORS.background3};
+    min-height: 100vh;
+    width: 100%;
+`
+const PostWrapper = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    column-gap: 30px;
+`
+const Card = styled.a`
+    width: 350px;
+    height: 270px;
+    border-radius: 20px;
+    margin-top: 50px;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    transition:  500ms cubic-bezier(0.4, 0, 0.2, 1);
+    :hover {
+        transform: scale(1.1);
     }
-    const response = await fetch('http://localhost:5000/api/post')
-    const posts = await response.json();
-    return {
-        posts
-    }
-}
+`
+const PostTitle = styled.div`
+    text-align: center;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 21px;
+    font-style: normal;
+    color: ${COLORS.color};
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: ${COLORS.background};
+    border-radius: 0px 0px 15px 15px;
+    padding:15px 20px;
+`

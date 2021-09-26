@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { NextPageContext } from 'next';
 import { useRouter } from 'next/router'
 import Head from 'next/head';
 import Link from 'next/link'
@@ -8,6 +9,108 @@ import axios from 'axios';
 
 import { Navbar, PostCard } from '../../components';
 import { COLORS } from '../../public/colors';
+import { IPost } from '../../types';
+
+interface Iprop {
+    post: IPost
+}
+
+export default function Post({ post: serverPost }: Iprop) {
+    const [post, setPost] = useState(serverPost)
+
+    const router = useRouter()
+    const { id } = router.query
+
+    useEffect(() => {
+        async function load() {
+            const response = await fetch(`${process.env.API_URL}/post/${id}`)
+            const data = await response.json()
+            console.log("🔥🚀 ===> load ===> data", data);
+            setPost(data)
+
+        }
+        if (!serverPost) {
+            load()
+        }
+    }, [])
+
+    if (!post) {
+        return <h2>Loading posts</h2>
+    }
+
+    const removePost = async () => {
+        await axios.post(`${process.env.API_URL}/post/remove`, {
+            id: post._id
+        }).then(() => router.push('/'))
+    }
+
+
+    return (
+        <Wrapper>
+            <Head>
+                <title>Post: {post.title}</title>
+            </Head>
+
+            <Navbar />
+            <div className="container">
+                <Link href='/'>
+                    <BtnBack>
+                        <Image
+                            src='/static/back.svg'
+                            width={24}
+                            height={15}
+                        />
+                        Назад
+                    </BtnBack>
+                </Link>
+
+                <BtnBack onClick={removePost}>
+                    Удалить
+                </BtnBack>
+
+                <h1>Post : {post.title}</h1>
+
+                <PostCard
+                    image={post.image + `?sig=${post._id}`}
+                    title={post.title}
+                    description={post.description}
+                />
+
+            </div>
+        </Wrapper>
+    )
+}
+
+Post.getInitialProps = async ({ query, req }: NextPageContext) => {
+    if (!req) {
+        return { post: null }
+    }
+
+    const response = await fetch(`${process.env.API_URL}/posts/${query.id}`)
+    const post = await response.json();
+    return {
+        post
+    }
+}
+
+// export async function getServerSideProps({ query }) {
+//     const res = await fetch(`${process.env.API_URL}/api/post/${query.id}`)
+//     const post = await res.json()
+
+//     if (!post) {
+//         return {
+//             notFound: true,
+//         }
+//     }
+
+//     return {
+//         props: {
+//             post
+//         }, // will be passed to the page component as props
+//     }
+// }
+
+
 
 const Wrapper = styled.div`
     background:${COLORS.background3};
@@ -41,102 +144,3 @@ const BtnBack = styled.button`
         box-shadow: 0px 10px 25px rgba(148, 174, 213, 0.5);
     }
 `
-export default function Post({ post: serverPost }) {
-    const [post, setPost] = useState(serverPost)
-
-    const router = useRouter()
-    const { id } = router.query
-
-    useEffect(() => {
-        async function load() {
-            const response = await fetch(`http://localhost:5000/api/post/${id}`)
-            const data = await response.json()
-            console.log("🔥🚀 ===> load ===> data", data);
-            setPost(data)
-
-        }
-        if (!serverPost) {
-            load()
-        }
-    }, [])
-
-    if (!post) {
-        return <h2>Loading posts</h2>
-    }
-
-    const removePost = async () => {
-        await axios.post(`http://localhost:5000/api/post/remove`, {
-            id: post._id
-        }).then(() => router.push('/'))
-    }
-
-
-    return (
-        <Wrapper>
-            <Head>
-                <title>Post: {post.title}</title>
-            </Head>
-
-            <Navbar />
-            <div className="container">
-                <Link href='/'>
-                    <BtnBack>
-                        <Image
-                            src='/static/back.svg'
-                            width={24}
-                            height={15}
-                        />
-                        Назад
-                    </BtnBack>
-                </Link>
-
-                <BtnBack onClick={removePost}>
-                    Удалить
-                </BtnBack>
-
-                <h1>Post : {post.title}</h1>
-
-                {/* <Image
-                    alt="Card"
-                    src={post.image + `?sig=${post._id}`}
-                    // layout="fill"
-                    objectFit="cover"
-                    quality={100}
-                    width={700}
-                    height={470}
-                /> */}
-
-                <PostCard image={post.image + `?sig=${post._id}`} title={post.title} description={post.description} />
-
-            </div>
-        </Wrapper>
-    )
-}
-
-// export async function getServerSideProps({ query }) {
-//     const res = await fetch(`http://localhost:5000/api/post/${query.id}`)
-//     const post = await res.json()
-
-//     if (!post) {
-//         return {
-//             notFound: true,
-//         }
-//     }
-
-//     return {
-//         props: {
-//             post
-//         }, // will be passed to the page component as props
-//     }
-// }
-
-Post.getInitialProps = async ({ query, req }) => {
-    if (!req) {
-        return { post: null }
-    }
-    const response = await fetch(`http://localhost:4300/posts/${query.id}`)
-    const post = await response.json();
-    return {
-        post
-    }
-}
